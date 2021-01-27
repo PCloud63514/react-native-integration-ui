@@ -2,15 +2,15 @@ import convertRGBA from '../utils/rgb2rgba'
 import { ColorPaltte } from '../colors'
 
 
-const sub:SubPalette = {
-    floatingActionButton:'',
-    selectionControl:'String',
-    slider:'String',
-    switch:'String',
-    progressBar:'String',
-    link:'String',
-    headline:'String'
-}
+// const sub:SubPalette = {
+//     floatingActionButton:'',
+//     selectionControl:'String',
+//     slider:'String',
+//     switch:'String',
+//     progressBar:'String',
+//     link:'String',
+//     headline:'String'
+// }
 
 const Light = {//:Palette = {
     // primaryColor: ColorPaltte.black,

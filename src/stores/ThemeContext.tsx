@@ -10,7 +10,7 @@ import { LightPurple, Dracula, Indigo } from '../styles/palttes'
 
 // moko mdata
 export const MokoData:Theme = {
-    palette:Indigo
+    palette:Dracula
 }
 
 // palette, theme 는 type 으로 변경해야할듯
