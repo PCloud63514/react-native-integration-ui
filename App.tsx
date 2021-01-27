@@ -14,8 +14,9 @@ import {
   StyleSheet,
   View,
   Text,
+  BackHandler,
 } from 'react-native';
-import Button from './src/components/button'
+import { Button, FloatingActionButton} from './src/components'
 import ThemeContext, { MokoData } from './src/stores/ThemeContext'
 import {
   Colors,
@@ -27,9 +28,18 @@ const App = () => {
   return (
     <>
     <ThemeContext.Provider value={MokoData}>
-      <SafeAreaView style={{margin:15}}>
-        <View style={{width:100}}>
-          <Button type={'outlined'} icon={'plus'} states={'enabled'} text={'button'}/>        
+      <SafeAreaView style={{flex:1, margin:15, backgroundColor:'pink'}}>
+        <View style={{flex:1, margin:15, backgroundColor:'yellow'}}>
+          <View style={{ justifyContent:'space-around', alignItems:'center',  height:'50%', padding:10, backgroundColor:'silver'}}>
+            <Button type='text' states='enabled' icon={'plus'} text='button'/>
+            <Button type='contained' states='enabled' icon={'plus'} text='button'/>
+            <Button type='outlined' states='enabled' icon={'plus'} text='button'/>
+          </View>
+          <View style={{ justifyContent:'space-around', alignItems:'center',  height:'50%', padding:10, backgroundColor:'#D32F2F'}}>
+            <FloatingActionButton type='regular' icon={'plus'} states={'enabled'} text={'button'}/> 
+            <FloatingActionButton type='mini' icon={'plus'} states={'enabled'} text={'button'}/>        
+            <FloatingActionButton type='extended' icon={'plus'} states={'enabled'} text={'button'} onPress={() => {console.log('test')}}/>               
+          </View>
         </View>
       </SafeAreaView>
       </ThemeContext.Provider>

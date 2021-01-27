@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { light } from '../styles/palttes'
+import { LightPurple, Dracula, Indigo } from '../styles/palttes'
 //ui design
 //theme
 //  - Component Color
@@ -10,7 +10,7 @@ import { light } from '../styles/palttes'
 
 // moko mdata
 export const MokoData:Theme = {
-    palette:light
+    palette:Indigo
 }
 
 // palette, theme 는 type 으로 변경해야할듯

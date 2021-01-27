@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { View , Text, TouchableHighlight, StyleSheet } from 'react-native'
+import { View , Text, TouchableNativeFeedback } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import ThemeContext from '../../stores/ThemeContext'
 
@@ -12,66 +12,76 @@ import ThemeContext from '../../stores/ThemeContext'
  * key:String
  * type: 'text' | 'outlined' | 'contained' | 'toggle'
  * states:'enabled' | 'disabled' | 'hover' | 'focused' | 'pressed' | 'active'
- * onPress:Function
+ * onPress:any
+ * onLongPress:any
  * text:String
  * icon:String
  */
 declare global {
-    type Button = {
+    type T_Button = {
         key?:string,
         type: 'text' | 'outlined' | 'contained' | 'toggle',
         states: 'enabled' | 'disabled' | 'hover' | 'focused' | 'pressed' | 'active'
-        onPress?:Function,
-        onLongPress?:Function,
-        text?:string,
-        icon:string,
+        onPress?:any,
+        onLongPress?:any,
+        text:string,
+        icon?:string,
      }
 }
 
-const test = StyleSheet.create({
-    container: {
-        
-    }
-})
-
-function getStyle(props:Button, context:Theme):any {
+function getStyle(props:T_Button, context:Theme):any {
     const { type, states, icon } = props
     const { palette } = context
     var styles: Record<string, any> = {
         container: {
             flexDirection: 'row',
-            padding:15,
             alignItems:'center',
-            justifyContent:'center'
+            
+            minWidth:64,
+            minHeight:36,
         },
-        text:{},
+        text:{
+            fontWeight:'bold',
+            fontSize:10
+            // textAlign:'center'
+        },
         icon:{
             color:'#ffffff',
-            fontSize:14
+            fontSize:10
         }
     }
 
     switch(type) {
         case 'text': 
-
+            styles.text.marginLeft = 8
+            styles.text.marginRight = 8
+            styles.text.color = palette.secondaryColor
+            styles.icon.color = palette.secondaryColor
         break
         case 'contained': 
-            styles.container.backgroundColor= palette.activeBackgroundColor
-            styles.text.color = palette.alternateTextColor
+            styles.text.marginLeft = 16
+            styles.text.marginRight = 16
+            styles.container.backgroundColor= palette.secondaryLightColor
+            styles.text.color = palette.onSecondaryColor
+            styles.icon.color = palette.onSecondaryColor
             styles.container.borderRadius=5
         break
         case 'outlined': 
-            styles.container.backgroundColor= palette.alternateTextColor
-            styles.container.borderColor = palette.activeBackgroundColor
-            styles.icon.color = palette.activeBackgroundColor
-            styles.container.borderWidth = 1
+            styles.text.marginLeft = 16
+            styles.text.marginRight = 16
+            styles.container.borderColor = palette.secondaryLightColor
+            styles.icon.color = palette.secondaryColor
+            styles.text.color = palette.secondaryColor
+            styles.container.borderWidth = 1.5
             styles.container.borderRadius = 5
         break
         case 'toggle': break
     }
 
     if(icon) {
+        styles.icon.marginLeft = 12
         styles.icon.marginRight = 8
+        styles.text.marginLeft = 0
     }
 
     return {
@@ -79,7 +89,8 @@ function getStyle(props:Button, context:Theme):any {
             styles.container
         ],
         text: [
-            styles.text
+            styles.text,
+            
         ],
         icon:[
             styles.icon
@@ -87,28 +98,25 @@ function getStyle(props:Button, context:Theme):any {
     }
 }
 
-class ImplButton extends PureComponent<Button> {
+class Button extends PureComponent<T_Button> {
     static contextType = ThemeContext
 
-    test = () => {
-        console.log('hi')
-    }
     render():any {
         const { key, onPress, text, icon } = this.props
         
         const mergeStyles = getStyle(this.props, this.context)
 
         return (
-            <TouchableHighlight style={{backgroundColor:'red'}}onPress={this.test}>
+            <TouchableNativeFeedback onPress={onPress}>
             <View style={ mergeStyles.container}>
-                    <Icon style={mergeStyles.icon} name={'plus'} size={mergeStyles.icon.fontSize} color={mergeStyles.icon.color}/>
+                { icon && (<Icon style={mergeStyles.icon} name={icon} size={mergeStyles.icon.fontSize} color={mergeStyles.icon.color}/>)}
                     <Text style={mergeStyles.text}>
                         {text?.toUpperCase()}
                     </Text>
                 </View>
-            </TouchableHighlight>    
+            </TouchableNativeFeedback>    
         )
     }
 }
 
-export default ImplButton
+export default Button
