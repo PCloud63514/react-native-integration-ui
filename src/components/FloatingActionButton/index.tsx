@@ -2,11 +2,7 @@ import React, { PureComponent } from 'react'
 import { View , Text, TouchableNativeFeedback, Animated, Platform } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import ThemeContext from '../../stores/ThemeContext'
-
-/**
- * Material Component UI 규칙
- * Single Line
- */
+import { FloatingActionButtonItem } from '..'
 
 /**
  * key:String
@@ -19,7 +15,7 @@ import ThemeContext from '../../stores/ThemeContext'
  */
 declare global {
     type T_FloatingActionButton = {
-        key?:string,
+        id?:string,
         type: 'regular' | 'mini' | 'extended'
         states: 'enabled' | 'disabled' | 'hover' | 'focused' | 'pressed' | 'active'
         onPress?:any,
@@ -27,6 +23,7 @@ declare global {
         Items?:[T_FloatingActionButtonItem]
         text?:string,
         icon:string,
+        children?:any
      }
 }
 
@@ -102,12 +99,6 @@ function getStyle(props:T_FloatingActionButton, context:Theme):any {
         break
     }
 
-    // if(icon) {
-    //     styles.icon.marginLeft = 12
-    //     styles.icon.marginRight = 8
-    //     styles.text.marginLeft = 0
-    // }
-
     return {
         container: [
             styles.container
@@ -124,66 +115,67 @@ function getStyle(props:T_FloatingActionButton, context:Theme):any {
 
 class FloatingActionButton extends PureComponent<T_FloatingActionButton> {
     static contextType = ThemeContext
-
     state = {
         animation: new Animated.Value(0),
-        animMode:'init',
-        icon:this.props.icon
+        icon:this.props.icon,
+        animStatus:'init',
+        itemStatus:'none'
     }
-
+    
     touchableEvent = () => {
-        const { animation, animMode } = this.state
+        const { animation, animStatus } = this.state
+        this.setState({itemStatus: this.state.itemStatus === 'init' ? 'final' : 'init'})
         
         const test = Animated.timing(
             this.state.animation,
             {
-                toValue:animMode === 'init' ? 1 : 0,
+                toValue:animStatus === 'init' ? 1 : 0,
                 duration:500,
                 useNativeDriver:true
             },
-        ).start(() => this.setState({animMode: animMode !== 'init' ? 'init': 'final'}))
-    }
-
-    animationListener = (state: {value:number}) => {
-        if (state.value === 0.5) {
-            this.setState({icon: this.state.animMode !== 'init' ? this.props.icon : 'close'})
+            ).start(() => this.setState({animStatus: animStatus !== 'init' ? 'init': 'final'}))
         }
-    }
-
-    constructor(props:T_FloatingActionButton) {
-        super(props)
-        this.state.animation.addListener(this.animationListener)
-    }
-
-    getAnimationStyle() {
-        const animationStyle = {
-            transform:[
-                {
-                    rotate: this.state.animation.interpolate({
-                        inputRange:[0,1],
-                        outputRange:['0deg', '360deg']
-                    })
-                },
-                {
-                    scale: this.state.animation.interpolate({
-                        inputRange:[0, 0.5, 1],
-                        outputRange:[1, 0.5, 1]
-                    })
-                }
-            ]
+        
+        animationListener = (state: {value:number}) => {
+            if (state.value === 0.5) {
+                this.setState({icon: this.state.animStatus !== 'init' ? this.props.icon : 'close'})
+            }
         }
-        return animationStyle
-    }
-    
-    renderAnimatedView= (mergeStyles:any, type:string, text?:string) => (
-        <View style={mergeStyles.container}>
+        
+        constructor(props:T_FloatingActionButton) {
+            super(props)
+            this.state.animation.addListener(this.animationListener)
+        }
+        
+        getAnimationStyle() {
+            const animationStyle = {
+                transform:[
+                    {
+                        rotate: this.state.animation.interpolate({
+                            inputRange:[0,1],
+                            outputRange:['0deg', '360deg']
+                        })
+                    },
+                    {
+                        scale: this.state.animation.interpolate({
+                            inputRange:[0, 0.5, 1],
+                            outputRange:[1, 0.5, 1]
+                        })
+                    }
+                ]
+            }
+            return animationStyle
+        }
+        
+        renderAnimatedView= (mergeStyles:any, type:string, text?:string) => (
+            <View style={mergeStyles.container}>
             <Animated.View style={ [{}, this.getAnimationStyle()]}>
                 <Icon style={mergeStyles.icon} name={this.state.icon} size={mergeStyles.icon.fontSize} color={mergeStyles.icon.color}/>
                 {/* {  type === 'extended' && (<Text style={mergeStyles.text}> {text?.toUpperCase()} </Text>) }  */}
             </Animated.View>
         </View>
     )
-
+    
     renderView = (mergeStyles:any, type:string, text?:string) => (
         <View style={ mergeStyles.container}>
             <Icon style={mergeStyles.icon} name={this.state.icon} size={mergeStyles.icon.fontSize} color={mergeStyles.icon.color}/>
@@ -191,16 +183,28 @@ class FloatingActionButton extends PureComponent<T_FloatingActionButton> {
         </View>
     )
 
+    renderFlotingItem = (children:any) => (children.map((child:any) => {
+        return React.cloneElement(child, {status:this.state.itemStatus})
+    }))
     render():any {
-        const { key, onPress, text, icon, type } = this.props
+        const { id, onPress, text, type, children } = this.props
         const mergeStyles = getStyle(this.props, this.context)
 
         const tochableEvent = onPress !== undefined ? onPress : this.touchableEvent
         const content = onPress !== undefined ? this.renderView(mergeStyles, type, text) : this.renderAnimatedView(mergeStyles, type, text)
         return (
+        <View style={{flexDirection:'column', justifyContent:'flex-end',backgroundColor:'pink'}}>
+
+            <View style={{ flex:1, alignItems:'center', justifyContent:'space-between'}}>
+                { children !== undefined && children.map !== undefined && this.renderFlotingItem(children) }
+            </View>
+            {/* <FloatingActionButtonItem text={'test'} icon={'send'}      status={this.state.itemStatus}/>
+              <FloatingActionButtonItem text={'test'} icon={'search'}  status={this.state.itemStatus}/>
+              <FloatingActionButtonItem text={'test'} icon={'comment'} status={this.state.itemStatus}/> */}
             <TouchableNativeFeedback onPress={tochableEvent}>
                 { content }
             </TouchableNativeFeedback>    
+        </View>
         )
     }
 }

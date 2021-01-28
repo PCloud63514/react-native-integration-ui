@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { LightPurple, Dracula, Indigo } from '../styles/palttes'
+import { LightPurple, Dracula, Indigo } from '../styles/palettes'
 //ui design
 //theme
 //  - Component Color

@@ -16,7 +16,7 @@ import {
   Text,
   BackHandler,
 } from 'react-native';
-import { Button, FloatingActionButton} from './src/components'
+import { Button, FloatingActionButton, FloatingActionButtonItem } from './src/components'
 import ThemeContext, { MokoData } from './src/stores/ThemeContext'
 import {
   Colors,
@@ -30,15 +30,26 @@ const App = () => {
     <ThemeContext.Provider value={MokoData}>
       <SafeAreaView style={{flex:1, margin:15, backgroundColor:'pink'}}>
         <View style={{flex:1, margin:15, backgroundColor:'yellow'}}>
-          <View style={{ justifyContent:'space-around', alignItems:'center',  height:'50%', padding:10, backgroundColor:'silver'}}>
+          <View style={{ justifyContent:'space-around', alignItems:'center',  height:'50%', padding:10, backgroundColor:'white'}}>
             <Button type='text' states='enabled' icon={'plus'} text='button'/>
             <Button type='contained' states='enabled' icon={'plus'} text='button'/>
             <Button type='outlined' states='enabled' icon={'plus'} text='button'/>
           </View>
-          <View style={{ justifyContent:'space-around', alignItems:'center',  height:'50%', padding:10, backgroundColor:'#D32F2F'}}>
-            <FloatingActionButton type='regular' icon={'plus'} states={'enabled'} text={'button'}/> 
-            <FloatingActionButton type='mini' icon={'plus'} states={'enabled'} text={'button'}/>        
-            <FloatingActionButton type='extended' icon={'plus'} states={'enabled'} text={'button'} onPress={() => {console.log('test')}}/>               
+          <View style={{flexDirection:'row', flex:1,  height:'50%'}}>
+            <View style={{ alignItems:'center', justifyContent:'space-evenly', backgroundColor:'pink'}}>
+              <FloatingActionButtonItem text={'test'} icon={'send'}    status={'init'}/>
+              <FloatingActionButtonItem text={'test'} icon={'search'}  status={'init'}/>
+              <FloatingActionButtonItem text={'test'} icon={'comment'} status={'init'}/>
+            </View>
+            
+              <FloatingActionButton type='regular' icon={'send'} states={'enabled'} text={'button'}>
+                <FloatingActionButtonItem text={'test'} icon={'search'}/>
+                <FloatingActionButtonItem text={'test'} icon={'send'}/>
+                <FloatingActionButtonItem text={'test'} icon={'comment'}/>
+              </FloatingActionButton>
+              <FloatingActionButton type='mini' icon={'plus'} states={'enabled'} text={'button'}/>        
+              <FloatingActionButton type='extended' icon={'plus'} states={'enabled'} text={'button'} onPress={() => {console.log('test')}}/>               
+            
           </View>
         </View>
       </SafeAreaView>

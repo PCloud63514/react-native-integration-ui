@@ -19,7 +19,7 @@ import ThemeContext from '../../stores/ThemeContext'
  */
 declare global {
     type T_Button = {
-        key?:string,
+        id?:string,
         type: 'text' | 'outlined' | 'contained' | 'toggle',
         states: 'enabled' | 'disabled' | 'hover' | 'focused' | 'pressed' | 'active'
         onPress?:any,
@@ -102,7 +102,7 @@ class Button extends PureComponent<T_Button> {
     static contextType = ThemeContext
 
     render():any {
-        const { key, onPress, text, icon } = this.props
+        const { id, onPress, text, icon } = this.props
         
         const mergeStyles = getStyle(this.props, this.context)
 
